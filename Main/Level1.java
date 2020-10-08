@@ -13,8 +13,8 @@ public class Level1 extends Scene{
   @Override
   public void act(float deltaTime){
     PApplet pEngine = Green.getInstance().getParent();
-    System.out.println("MouseX: " + pEngine.pmouseX + " MouseY: " + pEngine.pmouseY);
+    System.out.println("MouseX: " + pEngine.mouseX + " MouseY: " + pEngine.mouseY);
     engine.getParent().background(51);
-    map.DrawTileAtPos(pEngine.pmouseX, pEngine.pmouseY);
+    map.DrawTileAtPos(pEngine.mouseX, pEngine.mouseY);
   }
 }
