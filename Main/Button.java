@@ -9,8 +9,7 @@ public class Button extends Actor {
   }
   @Override
   public void act(float deltaTime) {
-    //System.out.println(isMouseButtonDownHere(PConstants.LEFT));
-    if (isMouseButtonDownHere(PConstants.LEFT) && !wasPressed){
+    if (isMouseButtonUpThisFrameHere(PConstants.LEFT) && !wasPressed){
       wasPressed = true;
       onPressed.invoke();
     }
