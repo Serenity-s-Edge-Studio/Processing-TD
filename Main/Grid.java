@@ -50,8 +50,8 @@ public class Grid extends Actor {
             _processing.fill(255);
             break;
           case Empty:
-            _processing.fill(0);
-            break;
+            _processing.image(Tile.sprites[1], x * tileLength + marginX, y * tileLength + marginY, tileLength, tileLength);
+            continue; //<>//
           case Mount:
             _processing.fill(153);
             break;

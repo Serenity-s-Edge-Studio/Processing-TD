@@ -2,6 +2,8 @@ import shiffman.box2d.*;
 
 import Green.*;
 
+import g4p_controls.*;
+
 public Green engine;
 private MainMenu menu;
 void setup()
@@ -11,6 +13,7 @@ void setup()
     engine = new Green(this);
     menu = new MainMenu(engine);
     engine.loadWorld(menu);
+    loadTileResources();
 }
 void draw(){
   engine.handleDraw();
@@ -31,4 +34,8 @@ void keyPressed(){
 }
 void keyReleased(){
   engine.handleKeyUp(key, keyCode);
+}
+void loadTileResources(){
+  Tile.sprites = new PImage[5];
+  Tile.sprites[1] = loadImage("Sand Tile.png");
 }
