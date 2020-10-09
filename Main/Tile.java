@@ -5,11 +5,12 @@ public class Tile {
     Walkable,
     Empty,
     Mount,
-    Goal
+    Goal,
+    Start
   }
   public type tileType;
   public Tile(){
-    this.tileType = type.Walkable;
+    this.tileType = type.Empty;
   }
   public Tile(type tileType){
     this.tileType = tileType;

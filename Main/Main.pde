@@ -13,13 +13,22 @@ void setup()
     engine.loadWorld(menu);
 }
 void draw(){
-  engine.handleMousePosition(pmouseX, pmouseY, mouseX, mouseY);
   engine.handleDraw();
   engine.handleAct();
+  engine.handleInput();
 }
 void mousePressed(){
   engine.handleMouseDown(mouseButton);
 }
 void mouseReleased(){
   engine.handleMouseUp(mouseButton);
+}
+void mouseMoved(){
+  engine.handleMousePosition(pmouseX, pmouseY, mouseX, mouseY);
+}
+void keyPressed(){
+  engine.handleKeyDown(key, keyCode);
+}
+void keyReleased(){
+  engine.handleKeyUp(key, keyCode);
 }

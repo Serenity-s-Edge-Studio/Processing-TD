@@ -16,7 +16,7 @@ public class MainMenu extends Scene{
                    @Override
                    public void invoke(){
                      System.out.println("Load Game");
-                     engine.loadWorld(new Level1(engine, engine.getParent().loadImage("rick.jpg")));
+                     engine.loadWorld(new Level(engine));
                    }
                  }
                  ));
