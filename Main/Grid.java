@@ -1,5 +1,6 @@
 import Green.*;
 import processing.core.*;
+import processing.data.*;
 public class Grid extends Actor {
   private Tile[][] map;
   private int mapWidth, mapHeight;
@@ -9,6 +10,7 @@ public class Grid extends Actor {
   public Grid(int marginX, int marginY, int tileLength, int mapWidth, int mapHeight) {
     super(marginX, marginY, mapWidth-(marginX*2), mapHeight-(marginY*2));
     tileLength = Math.max(tileLength, 1);
+    //tileLength = roundUp(tileLength, mapWidth/tileLength);
     this.marginX = marginX;
     this.marginY = marginY;
     //moveGlobal(marginX, marginY);
@@ -47,11 +49,11 @@ public class Grid extends Actor {
       for (int y = 0; y < map.length; y++){
         switch(map[x][y].tileType){
           case Walkable:
-            _processing.fill(255);
-            break;
+            _processing.image(Tile.sprites[0], x * tileLength + marginX, y * tileLength + marginY, tileLength, tileLength);
+            continue;
           case Empty:
             _processing.image(Tile.sprites[1], x * tileLength + marginX, y * tileLength + marginY, tileLength, tileLength);
-            continue; //<>//
+            continue;
           case Mount:
             _processing.fill(153);
             break;
@@ -85,5 +87,32 @@ public class Grid extends Actor {
       return -(Math.abs(numToRound) - remainder);
     else
       return numToRound + multiple - remainder;
+  }
+  public void clear(){
+    map = new Tile[this.mapWidth/tileLength][this.mapHeight/tileLength];
+    for (int x = 0; x < map[0].length; x++)
+      for (int y = 0; y < map.length; y++)
+        map[x][y] = new Tile();
+  }
+  public JSONObject toJSON(){
+    JSONObject json = new JSONObject();
+    JSONObject metaData = new JSONObject();
+    metaData.setInt("mapWidth", mapWidth);
+    metaData.setInt("mapHeight", mapHeight);
+    metaData.setInt("tileLength", tileLength);
+    metaData.setInt("marginX", marginX);
+    metaData.setInt("marginY", marginY);
+    json.setJSONObject("metaData", metaData);
+    
+    JSONArray tilesX = new JSONArray();
+    for (int x = 0; x < map[0].length; x++){
+      JSONArray tilesY = new JSONArray();
+      for (int y = 0; y < map.length; y++){
+        tilesY.setJSONObject(y, new JSONObject().setInt("type", map[x][y].tileType.ordinal()));
+      }
+      tilesX.setJSONArray(x, tilesY);
+    }
+    json.setJSONArray("Map", tilesX);
+    return json;
   }
 }

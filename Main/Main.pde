@@ -37,5 +37,6 @@ void keyReleased(){
 }
 void loadTileResources(){
   Tile.sprites = new PImage[5];
+  Tile.sprites[0] = loadImage("Path_Tile.png");
   Tile.sprites[1] = loadImage("Sand Tile.png");
 }

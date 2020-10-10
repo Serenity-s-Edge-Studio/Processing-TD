@@ -6,6 +6,7 @@ public class MainMenu extends Scene {
   GImageButton playButton;
   GImageButton instructionsButton; 
   GImageButton quitButton;
+  GImageButton editorButton; 
   public MainMenu(Green engine) {
     super(engine);
   }
@@ -28,21 +29,30 @@ public class MainMenu extends Scene {
   }
   public void exitGame(GImageButton source, GEvent event) {
     System.out.println("quitButton - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
+    engine.getParent().exit();
   }
+  public void launchEditor(GImageButton source, GEvent event) {
+    System.out.println("imgButton1 - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
+    disposeUI();
+    engine.loadWorld(new EditorSetup(engine));
+  } 
   public void createGUI() {
     G4P.messagesEnabled(false);
     G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
     G4P.setMouseOverEnabled(false);
     playButton = new GImageButton(engine.getParent(), 204, 108, new String[] { "Start_Button.png", "Start_Button.png", "Start_Button.png" } );
     playButton.addEventHandler(this, "loadGame");
-    instructionsButton = new GImageButton(engine.getParent(), 204, 216, new String[] { "Instructions_Button.png", "Instructions_Button.png", "Instructions_Button.png" } );
-    instructionsButton.addEventHandler(engine.getParent(), "instructionScene");
+    instructionsButton = new GImageButton(engine.getParent(), 204, 256, new String[] { "Instructions_Button.png", "Instructions_Button.png", "Instructions_Button.png" } );
+    instructionsButton.addEventHandler(this, "instructionScene");
     quitButton = new GImageButton(engine.getParent(), 204, 348, new String[] { "Exit_Button.png", "Exit_Button.png", "Exit_Button.png" } );
-    quitButton.addEventHandler(engine.getParent(), "exitGame");
+    quitButton.addEventHandler(this, "exitGame");
+    editorButton = new GImageButton(engine.getParent(), 204, 179, new String[] { "Map_Editor_Button.png", "Map_Editor_Button.png", "Map_Editor_Button.png" } );
+    editorButton.addEventHandler(this, "launchEditor");
   }
-  public void disposeUI(){
+  public void disposeUI() {
     playButton.dispose();
     instructionsButton.dispose();
     quitButton.dispose();
+    editorButton.dispose();
   }
 }
