@@ -30,9 +30,6 @@ public void launchEditor(GImageButton source, GEvent event) { //_CODE_:editorBut
   println("imgButton1 - GImageButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:editorButton:249830:
 
-synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:window1:615813:
-  appc.background(230);
-} //_CODE_:window1:615813:
 
 public void updateMarginX(GCustomSlider source, GEvent event) { //_CODE_:marginXSilder:245145:
   println("marginXSilder - GCustomSlider >> GEvent." + event + " @ " + millis());
@@ -93,6 +90,18 @@ public void setTileSpawn(GImageButton source, GEvent event) { //_CODE_:spawnTile
 public void exitEditor(GImageButton source, GEvent event) { //_CODE_:exit:439938:
   println("exit - GImageButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:exit:439938:
+
+synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:window3:574836:
+  appc.background(230);
+} //_CODE_:window3:574836:
+
+public void startWave(GImageButton source, GEvent event) { //_CODE_:startWaveButton:956681:
+  println("startWaveButton - GImageButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:startWaveButton:956681:
+
+public void imgButton1_click1(GImageButton source, GEvent event) { //_CODE_:imgButton1:819052:
+  println("imgButton1 - GImageButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:imgButton1:819052:
 
 
 
@@ -211,8 +220,34 @@ public void createGUI(){
   spawnTileButton.addEventHandler(this, "setTileSpawn");
   exit = new GImageButton(window2, 130, 466, new String[] { "Exit_Button.png", "Exit_Button.png", "Exit_Button.png" } );
   exit.addEventHandler(this, "exitEditor");
+  window3 = GWindow.getWindow(this, "Window title", 0, 0, 512, 512, JAVA2D);
+  window3.noLoop();
+  window3.setActionOnClose(G4P.KEEP_OPEN);
+  window3.addDrawHandler(this, "win_draw1");
+  startWaveButton = new GImageButton(window3, 383, 468, new String[] { "Start_Wave_Button.png", "Start_Wave_Button.png", "Start_Wave_Button.png" } );
+  startWaveButton.addEventHandler(this, "startWave");
+  waveCount = new GLabel(window3, 276, 473, 107, 40);
+  waveCount.setText("Wave number:");
+  waveCount.setOpaque(false);
+  enemyCount = new GLabel(window3, 128, 470, 146, 40);
+  enemyCount.setText("Remaining enemies: ");
+  enemyCount.setOpaque(false);
+  imgButton1 = new GImageButton(window3, 0, 468, new String[] { "Exit_Button.png", "Exit_Button.png", "Exit_Button.png" } );
+  imgButton1.addEventHandler(this, "imgButton1_click1");
+  scoreText = new GLabel(window3, 0, 0, 80, 40);
+  scoreText.setText("Score: 0");
+  scoreText.setOpaque(false);
+  moneyText = new GLabel(window3, 431, 0, 80, 40);
+  moneyText.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  moneyText.setText("Money: $0");
+  moneyText.setOpaque(false);
+  multiplierText = new GLabel(window3, 80, 0, 128, 40);
+  multiplierText.setText("Score multiplier: x1.0");
+  multiplierText.setTextBold();
+  multiplierText.setOpaque(false);
   window1.loop();
   window2.loop();
+  window3.loop();
 }
 
 // Variable declarations 
@@ -252,3 +287,11 @@ GImageButton goalButton;
 GLabel num5; 
 GImageButton spawnTileButton; 
 GImageButton exit; 
+GWindow window3;
+GImageButton startWaveButton; 
+GLabel waveCount; 
+GLabel enemyCount; 
+GImageButton imgButton1; 
+GLabel scoreText; 
+GLabel moneyText; 
+GLabel multiplierText; 

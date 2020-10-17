@@ -35,15 +35,19 @@ public class Grid extends Actor {
       PApplet _processing = Green.getInstance().getParent();
       _processing.noFill();
       _processing.stroke(250, 250, 250);
-      _processing.square((xPos/tileLength) * tileLength, (yPos/tileLength) * tileLength, tileLength);
+      int xIndex = roundUp(xPos - marginX - tileLength, tileLength)/tileLength;
+      int yIndex = roundUp(yPos - marginY - tileLength, tileLength)/tileLength;
+      _processing.square(xIndex * tileLength + marginX, yIndex * tileLength + marginY, tileLength);
     }
   }
   @Override
   public void act(float deltaTime) {
     PApplet _processing = Green.getInstance().getParent();
+    //grid outline
     _processing.noFill();
     _processing.stroke(250, 250, 250);
     _processing.rect(getX(), getY(), getWidth(), getHeight());
+    //renderLoop
     _processing.noStroke();
     for (int x = 0; x < map[0].length; x++){
       for (int y = 0; y < map.length; y++){
@@ -66,6 +70,7 @@ public class Grid extends Actor {
         _processing.square(x * tileLength + marginX, y * tileLength + marginY, tileLength);
       }
     }
+    //draw mouse over
     DrawTileAtPos(_processing.mouseX, _processing.mouseY);
   }
   public void SetTile(int xPos, int yPos, Tile.type type){
