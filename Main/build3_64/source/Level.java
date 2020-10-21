@@ -37,7 +37,7 @@ public class Level extends Scene {
     Vector2Int[] path = map.getPathScaled();
     if (path != null)
       addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, this));
-  } //<>//
+  }
 
   public void quitLevel(GImageButton source, GEvent event) {
     System.out.println("quitLevel - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
