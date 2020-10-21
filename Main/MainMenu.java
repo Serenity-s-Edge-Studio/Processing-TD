@@ -22,7 +22,7 @@ public class MainMenu extends Scene {
     System.out.println("imgButton1 - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
     System.out.println("Load Game");
     disposeUI();
-    engine.loadWorld(new Level(engine));
+    engine.loadWorld(new Level(engine, Grid.fromJSON(engine.getParent().loadJSONObject("saves/test.json"))));
   }
   public void instructionScene(GImageButton source, GEvent event) {
     System.out.println("instructionsButton - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());

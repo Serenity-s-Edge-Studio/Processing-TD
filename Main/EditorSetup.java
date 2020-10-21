@@ -61,7 +61,8 @@ public class EditorSetup extends Scene {
 
   public void loadMap(GButton source, GEvent event) { //_CODE_:loadButton:405479:
     System.out.println("loadButton - GButton >> GEvent." + event + " @ " + engine.getParent().millis());
-    engine.getParent().selectInput("Select saved map:", "loadMap");
+    File file = null;
+    engine.getParent().selectInput("Select saved map:", "loadMap", file, this);
   } //_CODE_:loadButton:405479:
   public void loadMap(File selection){}
   public void updateMapSize(){
