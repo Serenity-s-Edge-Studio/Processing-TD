@@ -2,6 +2,7 @@ import g4p_controls.*;
 
 import Green.*;
 import processing.core.*;
+import java.util.*;
 public class Level extends Scene {
   public Grid map;
   //UI variables
@@ -12,7 +13,14 @@ public class Level extends Scene {
   GLabel scoreText; 
   GLabel moneyText; 
   GLabel multiplierText;
-  
+
+  Vector2Int[] path;
+  int remainingEnemies = 0;
+  int waveSize = 5;
+  int waveNumber = 0;
+  final float waveMultiplier = 1.1f;
+  float currentWaveMultiplier = 1;
+  List<Wave> activeWaves = new LinkedList<Wave>();
   public Level(Green engine) {
     super(engine);
   }
@@ -21,7 +29,7 @@ public class Level extends Scene {
     this.map = map;
   }
   @Override
-  public void prepare() {
+    public void prepare() {
     if (map == null)
       map = new Grid(50, 50, 25, engine.getParent().sketchWidth(), engine.getParent().sketchHeight());
     addObject(map);
@@ -29,14 +37,49 @@ public class Level extends Scene {
     setBackgroundColor(0, 0, 0);
   }
   @Override
-  public void act(float deltaTime) {
-    
+    public void act(float deltaTime) {
+    List<Wave> wavesToRemove = new LinkedList<Wave>();
+    for (Wave w : activeWaves) {
+      w.tick(deltaTime);
+      if (w.remaining == 0) {
+        wavesToRemove.add(w);
+      }
+    }
+    for (Wave r : wavesToRemove) {
+      activeWaves.remove(r);
+
+      if (activeWaves.size() == 0)
+        startWave(false);
+    }
+    PApplet pEngine = Green.getInstance().getParent();
+    if (engine.isMouseButtonDown(PConstants.LEFT)) {
+      if (TurretDialog.instance != null && TurretDialog.instance.pointInBounds(pEngine.mouseX, pEngine.mouseY))
+        return;
+      Tile selectedTile = map.getTileAtPosition(pEngine.mouseX, pEngine.mouseY);
+      if (selectedTile != null && selectedTile.tileType == Tile.type.Mount) {
+        ShowTurretOptions(selectedTile);
+      }else if (TurretDialog.instance != null){
+        removeObject(TurretDialog.instance);
+        TurretDialog.instance = null;
+      }
+    }
+  }
+  private void ShowTurretOptions(Tile selected){
+    Vector2Int position = map.scalePosition(new Vector2Int(selected.x, selected.y));
+    position.x += map.getTileLength();
+    addObject(new TurretDialog(position.x, position.y, selected));
   }
   public void startWave(GImageButton source, GEvent event) {
     System.out.println("startWaveButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
-    Vector2Int[] path = map.getPathScaled();
-    if (path != null)
-      addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, this));
+    if (path == null)
+      path = map.getPathScaled();
+    startWave(true);
+  }
+  public void startWave(boolean triggeredByUser) {
+    waveSize *= currentWaveMultiplier;
+    currentWaveMultiplier *= waveMultiplier;
+    activeWaves.add(new Wave(1/waveMultiplier, waveSize, triggeredByUser? 0 : (float)Math.random() * 10 + 1));
+    waveNumber++;
   }
 
   public void quitLevel(GImageButton source, GEvent event) {
@@ -80,4 +123,24 @@ public class Level extends Scene {
     moneyText.dispose(); 
     multiplierText.dispose();
   }
+  class Wave {
+    public int remaining;
+    private float delay;
+    private float currentDelay;
+    public Wave(float spawnDelay, int amount, float period) {
+      remaining = amount;
+      delay = spawnDelay;
+      currentDelay = period;
+    }
+    public void tick(float deltaTime) {
+      currentDelay = Math.max(0, currentDelay - deltaTime * ((float)Math.random()*2 + .5f));
+      if (currentDelay < 0.1f) {
+        addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, Level.this));
+        remainingEnemies++;
+        remaining--;
+        currentDelay = delay;
+      }
+    }
+  }
+  
 }

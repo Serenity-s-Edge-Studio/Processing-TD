@@ -14,6 +14,7 @@ public class Enemy extends Actor{
   float currentDistance;
   float progress = 0;
   int speed = 20;
+  int health = 20;
   PApplet pEngine;
   public Enemy(float x, float y, PImage sprite, int w, int h, Vector2Int[] path, Level level){
     super(x,y,sprite, w,h);
@@ -41,5 +42,11 @@ public class Enemy extends Actor{
   }
   private void goalReached(){
     getWorld().removeObject(this);
+  }
+  public void damage(int amount){
+    health = Math.max(0, health - amount);
+    if (health == 0){
+    getWorld().removeObject(this);
+    }
   }
 }

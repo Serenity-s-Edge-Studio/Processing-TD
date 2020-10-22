@@ -1,3 +1,72 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import shiffman.box2d.*; 
+import Green.*; 
+import g4p_controls.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class Main extends PApplet {
+
+
+
+
+
+
+
+public Green engine;
+private MainMenu menu;
+public void setup()
+{
+  
+  print("Starting game engine");
+  engine = new Green(this);
+  menu = new MainMenu(engine);
+  engine.loadWorld(menu);
+  loadTileResources();
+}
+public void draw() {
+  background(51);
+  engine.handleAct();
+  engine.handleDraw();
+  engine.handleInput();
+}
+public void mousePressed() {
+  engine.handleMouseDown(mouseButton);
+}
+public void mouseReleased() {
+  engine.handleMouseUp(mouseButton);
+}
+public void mouseMoved() {
+  engine.handleMousePosition(pmouseX, pmouseY, mouseX, mouseY);
+}
+public void keyPressed() {
+  engine.handleKeyDown(key, keyCode);
+}
+public void keyReleased() {
+  engine.handleKeyUp(key, keyCode);
+}
+public void loadTileResources() {
+  Tile.sprites = new PImage[5];
+  Tile.sprites[0] = loadImage("Path_Tile.png");
+  Tile.sprites[1] = loadImage("Sand Tile.png");
+  Enemy.sprites = new PImage[1];
+  Enemy.sprites[0] = loadImage("Enemy_Shark.png");
+  Turret.sprites = new PImage[2];
+  Turret.sprites[0] = loadImage("Dolphin_Turret.png");
+  Turret.sprites[1] = loadImage("Shark_Turret.png");
+}
+
 /* =========================================================
  * ====                   WARNING                        ===
  * =========================================================
@@ -30,6 +99,9 @@ public void launchEditor(GImageButton source, GEvent event) { //_CODE_:editorBut
   println("imgButton1 - GImageButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:editorButton:249830:
 
+synchronized public void editorSetupDraw(PApplet appc, GWinData data) { //_CODE_:editorSetup:615813:
+  appc.background(230);
+} //_CODE_:editorSetup:615813:
 
 public void updateMarginX(GCustomSlider source, GEvent event) { //_CODE_:marginXSilder:245145:
   println("marginXSilder - GCustomSlider >> GEvent." + event + " @ " + millis());
@@ -103,6 +175,18 @@ public void imgButton1_click1(GImageButton source, GEvent event) { //_CODE_:imgB
   println("imgButton1 - GImageButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:imgButton1:819052:
 
+synchronized public void win_draw4(PApplet appc, GWinData data) { //_CODE_:window4:903912:
+  appc.background(230);
+} //_CODE_:window4:903912:
+
+public void selectDolphin(GImageButton source, GEvent event) { //_CODE_:dolphinButton:204492:
+  println("imgButton2 - GImageButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:dolphinButton:204492:
+
+public void selectShark(GImageButton source, GEvent event) { //_CODE_:sharkButton:544988:
+  println("imgButton3 - GImageButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:sharkButton:544988:
+
 
 
 // Create all the GUI controls. 
@@ -120,69 +204,69 @@ public void createGUI(){
   quitButton.addEventHandler(this, "exitGame");
   editorButton = new GImageButton(this, 204, 179, new String[] { "Start_Button.png", "Start_Button.png", "Start_Button.png" } );
   editorButton.addEventHandler(this, "launchEditor");
-  window1 = GWindow.getWindow(this, "Window title", 0, 0, 512, 512, JAVA2D);
-  window1.noLoop();
-  window1.setActionOnClose(G4P.KEEP_OPEN);
-  window1.addDrawHandler(this, "win_draw1");
-  marginXSilder = new GCustomSlider(window1, 306, 267, 165, 41, "grey_blue");
+  editorSetup = GWindow.getWindow(this, "Window title", 0, 0, 512, 512, JAVA2D);
+  editorSetup.noLoop();
+  editorSetup.setActionOnClose(G4P.KEEP_OPEN);
+  editorSetup.addDrawHandler(this, "editorSetupDraw");
+  marginXSilder = new GCustomSlider(editorSetup, 306, 267, 165, 41, "grey_blue");
   marginXSilder.setShowValue(true);
   marginXSilder.setShowLimits(true);
   marginXSilder.setLimits(50, 10, 100);
   marginXSilder.setNumberFormat(G4P.INTEGER, 0);
   marginXSilder.setOpaque(false);
   marginXSilder.addEventHandler(this, "updateMarginX");
-  label1 = new GLabel(window1, 242, 113, 80, 20);
+  label1 = new GLabel(editorSetup, 242, 113, 80, 20);
   label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   label1.setText("Margins:");
   label1.setOpaque(false);
-  mLabelX = new GLabel(window1, 201, 133, 80, 20);
+  mLabelX = new GLabel(editorSetup, 201, 133, 80, 20);
   mLabelX.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   mLabelX.setText("Margin X");
   mLabelX.setOpaque(false);
-  mLabelY = new GLabel(window1, 201, 195, 80, 20);
+  mLabelY = new GLabel(editorSetup, 201, 195, 80, 20);
   mLabelY.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   mLabelY.setText("Margin Y");
   mLabelY.setOpaque(false);
-  marginYSlider = new GCustomSlider(window1, 201, 215, 165, 40, "grey_blue");
+  marginYSlider = new GCustomSlider(editorSetup, 201, 215, 165, 40, "grey_blue");
   marginYSlider.setShowValue(true);
   marginYSlider.setShowLimits(true);
   marginYSlider.setLimits(50, 10, 100);
   marginYSlider.setNumberFormat(G4P.INTEGER, 0);
   marginYSlider.setOpaque(false);
   marginYSlider.addEventHandler(this, "updateMarginY");
-  mDimensionsPixel = new GLabel(window1, 201, 255, 195, 20);
+  mDimensionsPixel = new GLabel(editorSetup, 201, 255, 195, 20);
   mDimensionsPixel.setText("Map resolution (pixels):");
   mDimensionsPixel.setOpaque(false);
-  mTileSize = new GLabel(window1, 201, 275, 80, 20);
+  mTileSize = new GLabel(editorSetup, 201, 275, 80, 20);
   mTileSize.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   mTileSize.setText("Tile Size");
   mTileSize.setOpaque(false);
-  tileSizeSlider = new GCustomSlider(window1, 201, 296, 166, 40, "grey_blue");
+  tileSizeSlider = new GCustomSlider(editorSetup, 201, 296, 166, 40, "grey_blue");
   tileSizeSlider.setShowValue(true);
   tileSizeSlider.setShowLimits(true);
   tileSizeSlider.setLimits(25, 1, 100);
   tileSizeSlider.setNumberFormat(G4P.INTEGER, 0);
   tileSizeSlider.setOpaque(false);
   tileSizeSlider.addEventHandler(this, "updateTileSize");
-  mSize = new GLabel(window1, 201, 337, 200, 20);
+  mSize = new GLabel(editorSetup, 201, 337, 200, 20);
   mSize.setText("Map size (tiles):");
   mSize.setOpaque(false);
-  mTotalTiles = new GLabel(window1, 201, 358, 200, 20);
+  mTotalTiles = new GLabel(editorSetup, 201, 358, 200, 20);
   mTotalTiles.setText("Total tiles:");
   mTotalTiles.setOpaque(false);
-  generateButton = new GButton(window1, 255, 379, 80, 30);
+  generateButton = new GButton(editorSetup, 255, 379, 80, 30);
   generateButton.setText("Generate");
   generateButton.addEventHandler(this, "generateMap");
-  loadButton = new GButton(window1, 230, 44, 109, 30);
+  loadButton = new GButton(editorSetup, 230, 44, 109, 30);
   loadButton.setText("Load saved map");
   loadButton.addEventHandler(this, "loadMap");
-  cTitle = new GLabel(window1, 383, 61, 80, 20);
+  cTitle = new GLabel(editorSetup, 383, 61, 80, 20);
   cTitle.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   cTitle.setText("Custom map:");
   cTitle.setOpaque(false);
   togGroup1 = new GToggleGroup();
   togGroup2 = new GToggleGroup();
-  fileList = new GDropList(window1, 74, 79, 398, 385, 10, 10);
+  fileList = new GDropList(editorSetup, 74, 79, 398, 385, 10, 10);
   fileList.setItems(loadStrings("list_797367"), 0);
   fileList.addEventHandler(this, "setFile");
   window2 = GWindow.getWindow(this, "Window title", 0, 0, 512, 512, JAVA2D);
@@ -245,9 +329,30 @@ public void createGUI(){
   multiplierText.setText("Score multiplier: x1.0");
   multiplierText.setTextBold();
   multiplierText.setOpaque(false);
-  window1.loop();
+  window4 = GWindow.getWindow(this, "Window title", 0, 0, 100, 100, JAVA2D);
+  window4.noLoop();
+  window4.setActionOnClose(G4P.KEEP_OPEN);
+  window4.addDrawHandler(this, "win_draw4");
+  dolphinButton = new GImageButton(window4, 0, 20, 32, 32, new String[] { "Dolphin_Turret.png", "Dolphin_Turret.png", "Dolphin_Turret.png" } );
+  dolphinButton.addEventHandler(this, "selectDolphin");
+  sharkButton = new GImageButton(window4, 60, 20, 32, 32, new String[] { "Shark_Turret (Prototype).png", "Shark_Turret (Prototype).png", "Shark_Turret (Prototype).png" } );
+  sharkButton.addEventHandler(this, "selectShark");
+  title = new GLabel(window4, 0, 0, 100, 20);
+  title.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  title.setText("Buy turret");
+  title.setOpaque(false);
+  dolphin1desc = new GLabel(window4, 0, 60, 60, 40);
+  dolphin1desc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  dolphin1desc.setText("Dolphin turret: Speed: 10");
+  dolphin1desc.setOpaque(false);
+  sharkDesc = new GLabel(window4, 60, 60, 40, 40);
+  sharkDesc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  sharkDesc.setText("My label");
+  sharkDesc.setOpaque(false);
+  editorSetup.loop();
   window2.loop();
   window3.loop();
+  window4.loop();
 }
 
 // Variable declarations 
@@ -256,7 +361,7 @@ GImageButton playButton;
 GImageButton instructionsButton; 
 GImageButton quitButton; 
 GImageButton editorButton; 
-GWindow window1;
+GWindow editorSetup;
 GCustomSlider marginXSilder; 
 GLabel label1; 
 GLabel mLabelX; 
@@ -295,3 +400,20 @@ GImageButton imgButton1;
 GLabel scoreText; 
 GLabel moneyText; 
 GLabel multiplierText; 
+GWindow window4;
+GImageButton dolphinButton; 
+GImageButton sharkButton; 
+GLabel title; 
+GLabel dolphin1desc; 
+GLabel sharkDesc; 
+
+  public void settings() {  size(512, 512); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "Main" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
+  }
+}
