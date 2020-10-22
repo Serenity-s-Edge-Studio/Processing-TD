@@ -15,6 +15,7 @@ public class Enemy extends Actor{
   float progress = 0;
   float speed = 20;
   float health = 20;
+  public boolean isDead = false;
   PApplet pEngine;
   public Enemy(float x, float y, PImage sprite, int w, int h, Vector2Int[] path, Level level, float multiplier){
     super(x,y,sprite, w,h);
@@ -33,7 +34,8 @@ public class Enemy extends Actor{
       currentDistance = Vector2Int.distance(path[targetIndex-1], path[targetIndex]);
       currentFraction -= 1;
       }else{
-        goalReached();
+        ((Level)getWorld()).goalReached(this);
+        isDead = true;
       }
     }
     Vector2Int lastPos = path[targetIndex-1];
@@ -42,13 +44,11 @@ public class Enemy extends Actor{
     setLocation(pEngine.lerp(lastPos.x + posOffset, targetPos.x+ posOffset, currentFraction), pEngine.lerp(lastPos.y+ posOffset, targetPos.y+ posOffset, currentFraction));
     progress = currentFraction;
   }
-  private void goalReached(){
-    getWorld().removeObject(this);
-  }
   public void damage(int amount){
     health = Math.max(0, health - amount);
-    if (health == 0){
-    getWorld().removeObject(this);
+    if (health == 0 && !isDead){
+      isDead = true;
+      ((Level)getWorld()).enemyKilled(this);
     }
   }
 }
