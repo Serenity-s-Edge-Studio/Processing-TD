@@ -3,6 +3,7 @@ import processing.core.*;
 import g4p_controls.*;
 import java.io.*;
 import java.util.*;
+import java.awt.*;
 public class EditorSetup extends Scene {
   //UI
   GCustomSlider marginXSlider; 
@@ -101,6 +102,7 @@ public class EditorSetup extends Scene {
     label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
     label1.setText("Margins:");
     label1.setOpaque(false);
+    //label1.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 12));
     mLabelX = new GLabel(engine.getParent(), 201, 133, 80, 20);
     mLabelX.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
     mLabelX.setText("Margin X");

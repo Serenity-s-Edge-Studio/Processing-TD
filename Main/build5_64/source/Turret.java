@@ -22,7 +22,7 @@ public class Turret extends Actor{
         break;
       case Shark:
         range = 5*size;
-        delay = 60/20f;
+        delay = 60/120f;
         damage = 5;
         break;
     }

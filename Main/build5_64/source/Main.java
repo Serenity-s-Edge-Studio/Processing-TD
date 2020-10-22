@@ -29,7 +29,8 @@ private MainMenu menu;
 public void setup()
 {
   
-  print("Starting game engine");
+  credits();
+  textFont(createFont("raidercrusader.ttf", 12, true));
   engine = new Green(this);
   menu = new MainMenu(engine);
   engine.loadWorld(menu);
@@ -56,6 +57,12 @@ public void keyPressed() {
 public void keyReleased() {
   engine.handleKeyUp(key, keyCode);
 }
+public void credits(){
+  println("Diver defense: a tower defense game made in Processing");
+  println("created by: serenity edge studios:");
+  println("Sam Kessler, MarkAllman, meganmcnamee, Dillweeddude");
+  println("Starting game engine");
+}
 public void loadTileResources() {
   Tile.sprites = new PImage[5];
   Tile.sprites[0] = loadImage("Path_Tile.png");
@@ -66,7 +73,6 @@ public void loadTileResources() {
   Turret.sprites[0] = loadImage("Dolphin_Turret.png");
   Turret.sprites[1] = loadImage("Shark_Turret.png");
 }
-
 /* =========================================================
  * ====                   WARNING                        ===
  * =========================================================
@@ -406,7 +412,6 @@ GImageButton sharkButton;
 GLabel title; 
 GLabel dolphin1desc; 
 GLabel sharkDesc; 
-
   public void settings() {  size(512, 512); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Main" };

@@ -1,6 +1,7 @@
 import Green.*;
 
 import g4p_controls.*;
+import java.awt.*;
 
 public class TurretDialog extends Actor {
   public static TurretDialog instance = null;
@@ -52,15 +53,18 @@ public class TurretDialog extends Actor {
     sharkButton.addEventHandler(this, "selectShark");
     title = new GLabel(Green.getInstance().getParent(), 0 + x, 0 + y, 100, 20);
     title.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+    //title.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 12));
     title.setText("Buy turret");
     title.setOpaque(false);
     G4P.setDisplayFont("Arial", G4P.PLAIN, 6);
     dolphin1desc = new GLabel(Green.getInstance().getParent(), 0 + x, 60 + y, 60, 40);
     dolphin1desc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+    //dolphin1desc.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 6));
     dolphin1desc.setText("Dolphin turret:\nSpeed: 1\nDamage:20\nCost:100");
     dolphin1desc.setOpaque(false);
     sharkDesc = new GLabel(Green.getInstance().getParent(), 60 + x, 60 + y, 40, 40);
     sharkDesc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+    //sharkDesc.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 6));
     sharkDesc.setText("Shark turret:\nSpeed: 10\nDamage:5\nCost:1000");
     sharkDesc.setOpaque(false);
     G4P.setDisplayFont("Arial", G4P.PLAIN, 12);
@@ -75,6 +79,10 @@ public class TurretDialog extends Actor {
 
   public void selectShark(GImageButton source, GEvent event) { //_CODE_:sharkButton:544988:
     System.out.println("imgButton3 - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
+    Vector2Int position = ((Level)getWorld()).map.scalePosition(new Vector2Int(tile.x, tile.y));
+    getWorld().addObject(new Turret(position.x, position.y, ((Level)getWorld()).map.getTileLength(), Turret.type.Shark));
+    getWorld().removeObject(this);
+    instance = null;
   } //_CODE_:sharkButton:544988:
   public void dispose() {
     dolphinButton.dispose(); 

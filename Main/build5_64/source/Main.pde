@@ -9,7 +9,8 @@ private MainMenu menu;
 void setup()
 {
   size(512, 512);
-  print("Starting game engine");
+  credits();
+  textFont(createFont("raidercrusader.ttf", 12, true));
   engine = new Green(this);
   menu = new MainMenu(engine);
   engine.loadWorld(menu);
@@ -35,6 +36,12 @@ void keyPressed() {
 }
 void keyReleased() {
   engine.handleKeyUp(key, keyCode);
+}
+void credits(){
+  println("Diver defense: a tower defense game made in Processing");
+  println("created by: serenity edge studios:");
+  println("Sam Kessler, MarkAllman, meganmcnamee, Dillweeddude");
+  println("Starting game engine");
 }
 void loadTileResources() {
   Tile.sprites = new PImage[5];

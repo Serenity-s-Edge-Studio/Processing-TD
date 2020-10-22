@@ -93,6 +93,12 @@ public class Grid extends Actor {
   public int getTileLength(){
     return tileLength;
   }
+  public int getMarginY(){
+    return marginY;
+  }
+  public int getMarginX(){
+    return marginX;
+  }
   public void DrawTileAtPos(int xPos, int yPos) {
     //System.out.println("TilePos: " + (roundUp(xPos - marginX - tileLength, tileLength)/tileLength) + ", " + (roundUp(xPos - marginX - tileLength, tileLength)/tileLength));
     if (getTileAtPosition(xPos, yPos) != null) {

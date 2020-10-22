@@ -3,6 +3,7 @@ import g4p_controls.*;
 import Green.*;
 import processing.core.*;
 import java.util.*;
+import java.text.*;
 public class Level extends Scene {
   public Grid map;
   //UI variables
@@ -20,6 +21,9 @@ public class Level extends Scene {
   int waveNumber = 0;
   final float waveMultiplier = 1.1f;
   float currentWaveMultiplier = 1;
+  float currentScoreMultiplier = 1;
+  int score = 0;
+  int money = 100;
   List<Wave> activeWaves = new LinkedList<Wave>();
   public Level(Green engine) {
     super(engine);
@@ -33,6 +37,7 @@ public class Level extends Scene {
     if (map == null)
       map = new Grid(50, 50, 25, engine.getParent().sketchWidth(), engine.getParent().sketchHeight());
     addObject(map);
+    addObject(new Canvas());
     createUI();
     setBackgroundColor(0, 0, 0);
   }
@@ -78,8 +83,8 @@ public class Level extends Scene {
   public void startWave(boolean triggeredByUser) {
     waveSize *= currentWaveMultiplier;
     currentWaveMultiplier *= waveMultiplier;
+    currentScoreMultiplier *= waveMultiplier;
     activeWaves.add(new Wave(1/waveMultiplier, waveSize, triggeredByUser? 0 : (float)Math.random() * 10 + 1));
-    waveNumber++;
   }
 
   public void quitLevel(GImageButton source, GEvent event) {
@@ -90,43 +95,44 @@ public class Level extends Scene {
   private void createUI() {
     startWaveButton = new GImageButton(Green.getInstance().getParent(), 383, 468, new String[] { "Start_Wave_Button.png", "Start_Wave_Button.png", "Start_Wave_Button.png" } );
     startWaveButton.addEventHandler(this, "startWave");
-    waveCount = new GLabel(Green.getInstance().getParent(), 276, 473, 107, 40);
-    waveCount.setText("Wave number:");
-    waveCount.setOpaque(false);
-    waveCount.setTextBold();
-    enemyCount = new GLabel(Green.getInstance().getParent(), 128, 470, 146, 40);
-    enemyCount.setText("Remaining enemies: ");
-    enemyCount.setOpaque(false);
-    enemyCount.setTextBold();
+    //waveCount = new GLabel(Green.getInstance().getParent(), 276, 473, 107, 40);
+    //waveCount.setText("Wave number:");
+    //waveCount.setOpaque(false);
+    //waveCount.setTextBold();
+    //enemyCount = new GLabel(Green.getInstance().getParent(), 128, 470, 146, 40);
+    //enemyCount.setText("Remaining enemies: ");
+    //enemyCount.setOpaque(false);
+    //enemyCount.setTextBold();
     quitLevelButton = new GImageButton(Green.getInstance().getParent(), 0, 468, new String[] { "Exit_Button.png", "Exit_Button.png", "Exit_Button.png" } );
     quitLevelButton.addEventHandler(this, "quitLevel");
-    scoreText = new GLabel(Green.getInstance().getParent(), 0, 0, 80, 40);
-    scoreText.setText("Score: 0");
-    scoreText.setOpaque(false);
-    scoreText.setTextBold();
-    moneyText = new GLabel(Green.getInstance().getParent(), 431, 0, 80, 40);
-    moneyText.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-    moneyText.setText("Money: $0");
-    moneyText.setTextBold();
-    moneyText.setOpaque(false);
-    multiplierText = new GLabel(Green.getInstance().getParent(), 80, 0, 128, 40);
-    multiplierText.setText("Score multiplier: x1.0");
-    multiplierText.setTextBold();
-    multiplierText.setOpaque(false);
+    //scoreText = new GLabel(Green.getInstance().getParent(), 0, 0, 80, 40);
+    //scoreText.setText("Score: 0");
+    //scoreText.setOpaque(false);
+    //scoreText.setTextBold();
+    //moneyText = new GLabel(Green.getInstance().getParent(), 431, 0, 80, 40);
+    //moneyText.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+    //moneyText.setText("Money: $0");
+    //moneyText.setTextBold();
+    //moneyText.setOpaque(false);
+    //multiplierText = new GLabel(Green.getInstance().getParent(), 80, 0, 128, 40);
+    //multiplierText.setText("Score multiplier: x1.0");
+    //multiplierText.setTextBold();
+    //multiplierText.setOpaque(false);
   }
   void disposeUI() {
     startWaveButton.dispose(); 
-    waveCount.dispose(); 
-    enemyCount.dispose(); 
+    //waveCount.dispose(); 
+    //enemyCount.dispose(); 
     quitLevelButton.dispose(); 
-    scoreText.dispose(); 
-    moneyText.dispose(); 
-    multiplierText.dispose();
+    //scoreText.dispose(); 
+    //moneyText.dispose(); 
+    //multiplierText.dispose();
   }
   class Wave {
     public int remaining;
     private float delay;
     private float currentDelay;
+    private boolean started = false;
     public Wave(float spawnDelay, int amount, float period) {
       remaining = amount;
       delay = spawnDelay;
@@ -135,12 +141,37 @@ public class Level extends Scene {
     public void tick(float deltaTime) {
       currentDelay = Math.max(0, currentDelay - deltaTime * ((float)Math.random()*2 + .5f));
       if (currentDelay < 0.1f) {
-        addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, Level.this));
+        if (!started){started = true; waveNumber++;}
+        addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, Level.this, currentWaveMultiplier));
         remainingEnemies++;
         remaining--;
         currentDelay = delay;
       }
     }
   }
-  
+  class Canvas extends Actor{
+    public Canvas(){
+      super(0,0,512,512);
+    }
+    @Override
+    public void act(float deltaTime){}
+    @Override
+    public void draw(){
+      PApplet pEngine = engine.getParent();
+      pEngine.fill(153);
+      pEngine.noStroke();
+      pEngine.rect(0,0,512,map.getMarginY());
+      pEngine.fill(255);
+      DecimalFormat formatter = new DecimalFormat("#.00");
+      pEngine.text("Score: " + score, 0, map.getMarginY()/2);
+      pEngine.text("Score multiplier: x" + formatter.format(currentScoreMultiplier), 80, map.getMarginY()/2);
+      pEngine.text("Difficulty multiplier: x" + formatter.format(currentWaveMultiplier), 225, map.getMarginY()/2);
+      pEngine.text("Money: $" + money, 425, map.getMarginY()/2);
+      pEngine.fill(153);
+      pEngine.rect(0,513-map.getMarginY(),512,512);
+      pEngine.fill(255);
+      pEngine.text("Remaining enemies: " + remainingEnemies, 128, 513-map.getMarginY()/2);
+      pEngine.text("Wave count: " + waveNumber, 275, 513-map.getMarginY()/2);
+    }
+  }
 }
