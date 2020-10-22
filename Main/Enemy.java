@@ -13,15 +13,17 @@ public class Enemy extends Actor{
   int targetIndex = 1;
   float currentDistance;
   float progress = 0;
-  int speed = 20;
-  int health = 20;
+  float speed = 20;
+  float health = 20;
   PApplet pEngine;
-  public Enemy(float x, float y, PImage sprite, int w, int h, Vector2Int[] path, Level level){
+  public Enemy(float x, float y, PImage sprite, int w, int h, Vector2Int[] path, Level level, float multiplier){
     super(x,y,sprite, w,h);
     this.path = path;
     this.pEngine = Green.getInstance().getParent();
     this.currentDistance = Vector2Int.distance(path[targetIndex-1], path[targetIndex]);
     this.level = level;
+    this.speed = this.speed * (float)(Math.random() * multiplier + .5f);
+    this.health = this.health * (float)(Math.random() * multiplier + .5f);
   }
   public void act(float deltaTime){
     float currentFraction = progress + (deltaTime * speed)/currentDistance;
