@@ -95,38 +95,23 @@ public class Level extends Scene {
   private void createUI() {
     startWaveButton = new GImageButton(Green.getInstance().getParent(), 383, 468, new String[] { "Start_Wave_Button.png", "Start_Wave_Button.png", "Start_Wave_Button.png" } );
     startWaveButton.addEventHandler(this, "startWave");
-    //waveCount = new GLabel(Green.getInstance().getParent(), 276, 473, 107, 40);
-    //waveCount.setText("Wave number:");
-    //waveCount.setOpaque(false);
-    //waveCount.setTextBold();
-    //enemyCount = new GLabel(Green.getInstance().getParent(), 128, 470, 146, 40);
-    //enemyCount.setText("Remaining enemies: ");
-    //enemyCount.setOpaque(false);
-    //enemyCount.setTextBold();
     quitLevelButton = new GImageButton(Green.getInstance().getParent(), 0, 468, new String[] { "Exit_Button.png", "Exit_Button.png", "Exit_Button.png" } );
     quitLevelButton.addEventHandler(this, "quitLevel");
-    //scoreText = new GLabel(Green.getInstance().getParent(), 0, 0, 80, 40);
-    //scoreText.setText("Score: 0");
-    //scoreText.setOpaque(false);
-    //scoreText.setTextBold();
-    //moneyText = new GLabel(Green.getInstance().getParent(), 431, 0, 80, 40);
-    //moneyText.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-    //moneyText.setText("Money: $0");
-    //moneyText.setTextBold();
-    //moneyText.setOpaque(false);
-    //multiplierText = new GLabel(Green.getInstance().getParent(), 80, 0, 128, 40);
-    //multiplierText.setText("Score multiplier: x1.0");
-    //multiplierText.setTextBold();
-    //multiplierText.setOpaque(false);
   }
   void disposeUI() {
     startWaveButton.dispose(); 
-    //waveCount.dispose(); 
-    //enemyCount.dispose(); 
-    quitLevelButton.dispose(); 
-    //scoreText.dispose(); 
-    //moneyText.dispose(); 
-    //multiplierText.dispose();
+    quitLevelButton.dispose();
+  }
+  public void goalReached(Enemy enemy){
+    removeObject(enemy);
+    currentScoreMultiplier = 1;
+    remainingEnemies--;
+  }
+  public void enemyKilled(Enemy enemy){
+    removeObject(enemy);
+    remainingEnemies--;
+    money += 100;
+    score += 100 * currentScoreMultiplier;
   }
   class Wave {
     public int remaining;
