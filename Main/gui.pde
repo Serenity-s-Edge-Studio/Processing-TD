@@ -135,7 +135,7 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  playButton = new GImageButton(this, 204, 108, new String[] { "Start_Button.png", "Start_Button.png", "Start_Button.png" } );
+  playButton = new GImageButton(this, 204, 108, 127, 42, new String[] { "Start_Button.png", "Start_Button.png", "Start_Button.png" } );
   playButton.addEventHandler(this, "loadGame");
   instructionsButton = new GImageButton(this, 204, 256, new String[] { "Instructions_Button.png", "Instructions_Button.png", "Instructions_Button.png" } );
   instructionsButton.addEventHandler(this, "instructionScene");

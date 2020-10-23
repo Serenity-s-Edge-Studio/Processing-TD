@@ -82,8 +82,8 @@ public class TurretDialog extends Actor {
       pEngine.text("Dolphin turret:\nRange: 10\nSpeed: 10/s\nDamage:20\nCost:100", 0, 60);
       pEngine.text("Shark turret:\nRange: 5\nSpeed: 120/s\nDamage:5\nCost:1000", getWidth()/2, 60);
     }
-      pEngine.textSize(12);
-      pEngine.textAlign(PConstants.LEFT, PConstants.BASELINE);
+    pEngine.textSize(12);
+    pEngine.textAlign(PConstants.LEFT, PConstants.BASELINE);
   }
   private void createUI() {
     if (selectedTurret == null) {
@@ -124,14 +124,17 @@ public class TurretDialog extends Actor {
     }
   } //_CODE_:sharkButton:544988:
   public void dispose() {
-    if (selectedTurret == null) {
+    if (dolphinButton != null) 
       dolphinButton.dispose(); 
+    if (sharkButton != null) 
       sharkButton.dispose();
-    } else {
+    if (buySpeedButton != null) 
       buySpeedButton.dispose();
+    if (buyRangeButton != null) 
       buyRangeButton.dispose();
+    if (buyDamageButton != null) 
       buyDamageButton.dispose();
+    if (investButton != null) 
       investButton.dispose();
-    }
   }
 }
