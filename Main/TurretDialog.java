@@ -27,6 +27,7 @@ public class TurretDialog extends Actor {
     this.tile = tile;
     tl = new Vector2Int(x, y);
     br = new Vector2Int(x + getWidth(), y + getHeight());
+    setZ(2);
   }
   public TurretDialog(int x, int y, Tile tile, Turret turret) {
     this(x, y, tile);
@@ -64,7 +65,7 @@ public class TurretDialog extends Actor {
       pEngine.text("Upgrade turret", getWidth()/2, 10);
       pEngine.textAlign(PConstants.LEFT, PConstants.TOP);
       pEngine.textSize(8);
-      pEngine.textLeading(12);
+      pEngine.textLeading(17);
       pEngine.text(selectedTurret.turretType.toString() + "\nRange:\nSpeed:\nDamage:\nInvestment:", 0, 60);
       int[] levels = selectedTurret.getLevels();
       pEngine.textAlign(PConstants.CENTER, PConstants.TOP);
@@ -80,9 +81,9 @@ public class TurretDialog extends Actor {
       pEngine.textLeading(12);
       pEngine.text("Dolphin turret:\nRange: 10\nSpeed: 10/s\nDamage:20\nCost:100", 0, 60);
       pEngine.text("Shark turret:\nRange: 5\nSpeed: 120/s\nDamage:5\nCost:1000", getWidth()/2, 60);
+    }
       pEngine.textSize(12);
       pEngine.textAlign(PConstants.LEFT, PConstants.BASELINE);
-    }
   }
   private void createUI() {
     if (selectedTurret == null) {
@@ -91,13 +92,13 @@ public class TurretDialog extends Actor {
       sharkButton = new GImageButton(Green.getInstance().getParent(), x + getWidth() - 32 - getWidth()/8, 20 + y, 32, 32, new String[] { "Shark_Turret.png", "Shark_Turret.png", "Shark_Turret.png" } );
       sharkButton.addEventHandler(this, "selectShark");
     } else {
-      buySpeedButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
-      buySpeedButton.addEventHandler(selectedTurret, "buySpeed");
-      buyRangeButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buyRangeButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, getY() + 60 + 16, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
       buyRangeButton.addEventHandler(selectedTurret, "buyRange");
-      buyDamageButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buySpeedButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, getY() + 60 + 16 * 2, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buySpeedButton.addEventHandler(selectedTurret, "buySpeed");
+      buyDamageButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, getY() + 60 + 16 * 3, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
       buyDamageButton.addEventHandler(selectedTurret, "buyDamage");
-      investButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      investButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, getY() + 60 + 16 * 4, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
       investButton.addEventHandler(selectedTurret, "invest");
     }
   }

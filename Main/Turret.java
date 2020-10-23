@@ -1,3 +1,5 @@
+import g4p_controls.*;
+
 import Green.*;
 
 import processing.core.*;
@@ -7,8 +9,8 @@ public class Turret extends Actor {
   public type turretType;
   public int range, damage;
   public float delay, currentDelay, fireRate;
-  public int rangeCost, damageCost, fireRateCost, investmentCost; //<>//
-  public int rangeLevel, damageLevel, fireRateLevel, investmentLevel; //<>//
+  public int rangeCost, damageCost, fireRateCost, investmentCost;
+  public int rangeLevel, damageLevel, fireRateLevel, investmentLevel;
   private Vector2Int hitPosition;
   public enum type {
     Dolphin, 
@@ -61,15 +63,16 @@ public class Turret extends Actor {
     }
   }
   public int[] getLevels(){
-    return new int[]{rangeLevel,damageLevel,fireRateLevel,investmentLevel};
+    return new int[]{rangeLevel,fireRateLevel,damageLevel,investmentLevel};
   }
   public int[] getPrices(){
-    return new int[]{rangeCost,damageCost,fireRateCost,investmentCost};
+    return new int[]{rangeCost,fireRateCost,damageCost,investmentCost};
   }
   public float[] getValues(){
-    return new float[]{range, damage, fireRateCost, 100/(investmentLevel+1)};
+    return new float[]{range, fireRate, damage, 100/(investmentLevel+1)};
   }
-  public void buySpeed(){
+  public void buySpeed(GImageButton imagebutton, GEvent event){
+    System.out.println("buySpeedButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     if (((Level)getWorld()).buy(fireRateCost)){
       fireRate *= 1.2f;
       delay = 60/fireRate;
@@ -77,27 +80,30 @@ public class Turret extends Actor {
       fireRateLevel++;
     }
   }
-  public void buyRange(){
+  public void buyRange(GImageButton imagebutton, GEvent event){
+    System.out.println("buyRangeButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     if (((Level)getWorld()).buy(rangeCost)){
       range *= 1.2f;
       rangeCost *= 1.2f;
       rangeLevel++;
     }
   }
-  public void buyDamage(){
+  public void buyDamage(GImageButton imagebutton, GEvent event){
+    System.out.println("buyDamageButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     if (((Level)getWorld()).buy(damageCost)){
       damage *= 1.2f;
       damageCost *= 1.2f;
       damageLevel++;
     }
   }
-  public void invest(){
+  public void invest(GImageButton imagebutton, GEvent event){
+    System.out.println("buyInvestmentButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     if (((Level)getWorld()).buy(investmentCost)){
       investmentCost *= 10f;
       investmentLevel++;
-      fireRateCost *= 1/investmentLevel;
-      rangeCost *= 1/investmentLevel;
-      damageCost *= 1/investmentLevel;
+      fireRateCost = Math.round(fireRateCost * 1f/investmentLevel);
+      rangeCost = Math.round(rangeCost * 1f/investmentLevel);
+      damageCost = Math.round(damageCost * 1f/investmentLevel);
     }
   }
 }
