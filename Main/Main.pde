@@ -10,6 +10,7 @@ void setup()
 {
   size(512, 512);
   credits();
+  smooth(8);
   textFont(createFont("raidercrusader.ttf", 12, true));
   engine = new Green(this);
   menu = new MainMenu(engine);
@@ -17,7 +18,7 @@ void setup()
   loadTileResources();
 }
 void draw() {
-  background(51);
+  background(173, 216, 230);
   engine.handleAct();
   engine.handleDraw();
   engine.handleInput();

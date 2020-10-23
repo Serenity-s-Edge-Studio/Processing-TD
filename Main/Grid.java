@@ -21,16 +21,22 @@ public class Grid extends Actor {
     this.mapHeight = mapHeight-(marginY*2);
     this.tileLength = tileLength;
     map = new Tile[this.mapWidth/tileLength][this.mapHeight/tileLength];
-    for (int x = 0; x < map[0].length; x++)
-      for (int y = 0; y < map.length; y++)
-        map[x][y] = new Tile(x, y);
+    for (int x = 0; x < map.length; x++)
+      for (int y = 0; y < map[0].length; y++) {
+        try {
+          map[x][y] = new Tile(x, y);
+        }
+        catch(Exception e) {
+          e.printStackTrace(); //<>//
+        }
+      }
     singleton = this;
   }
   public Grid(int marginX, int marginY, int tileLength, int mapWidth, int mapHeight, Tile[][] array) {
     this(marginX, marginY, tileLength, mapWidth, mapHeight);
     this.map = array;
-    for (int x = 0; x < map[0].length; x++) {
-      for (int y = 0; y < map.length; y++) {
+    for (int x = 0; x < map.length; x++){
+      for (int y = 0; y < map[0].length; y++) {
         switch(map[x][y].tileType) {
         case Goal:
           goalTile = map[x][y];
@@ -46,30 +52,30 @@ public class Grid extends Actor {
   public Tile getTileAtPosition(int xPos, int yPos) {
     int xIndex = roundUp(xPos - marginX - tileLength, tileLength)/tileLength;
     int yIndex = roundUp(yPos - marginY - tileLength, tileLength)/tileLength;
-    if (yIndex < 0 || yIndex >= map.length || xIndex < 0 || xIndex >= map[0].length)
+    if (yIndex < 0 || yIndex >= map[0].length || xIndex < 0 || xIndex >= map.length)
       return null;
     return map[xIndex][yIndex];
   }
-  public Vector2Int[] getPath(){
-    if (pathArray == null){
+  public Vector2Int[] getPath() {
+    if (pathArray == null) {
       Queue<Vector2Int> path = calculatePath();
-      if (path != null){
+      if (path != null) {
         pathArray = new Vector2Int[0];
         pathArray = path.toArray(pathArray);
       }
     }
-    return pathArray.clone();
+    return pathArray != null?pathArray.clone():null;
   }
-  public Vector2Int[] getPathScaled(){
+  public Vector2Int[] getPathScaled() {
     Vector2Int[] returnList = getPath();
-    if (returnList != null){
-      for (int i = 0; i < returnList.length; i++){
+    if (returnList != null) {
+      for (int i = 0; i < returnList.length; i++) {
         returnList[i] = scalePosition(returnList[i]);
       }
     }
     return returnList;
   }
-  public Vector2Int scalePosition(Vector2Int value){
+  public Vector2Int scalePosition(Vector2Int value) {
     return new Vector2Int(value.x * tileLength + marginX, value.y * tileLength + marginY);
   }
   public int getGoalX() {
@@ -90,13 +96,13 @@ public class Grid extends Actor {
   public boolean spawnExists() {
     return spawnTile != null;
   }
-  public int getTileLength(){
+  public int getTileLength() {
     return tileLength;
   }
-  public int getMarginY(){
+  public int getMarginY() {
     return marginY;
   }
-  public int getMarginX(){
+  public int getMarginX() {
     return marginX;
   }
   public void DrawTileAtPos(int xPos, int yPos) {
@@ -112,16 +118,15 @@ public class Grid extends Actor {
   }
   @Override
     public void act(float deltaTime) {
-    
   }
   @Override
-  public void draw(){
+    public void draw() {
     PApplet _processing = Green.getInstance().getParent();
-    
+
     //renderLoop
     _processing.noStroke();
-    for (int x = 0; x < map[0].length; x++) {
-      for (int y = 0; y < map.length; y++) {
+    for (int x = 0; x < map.length; x++){
+      for (int y = 0; y < map[0].length; y++) {
         switch(map[x][y].tileType) {
         case Walkable:
           _processing.image(Tile.sprites[0], x * tileLength, y * tileLength, tileLength, tileLength);
@@ -151,13 +156,13 @@ public class Grid extends Actor {
   }
   private void DrawPath() {
     PApplet _processing = Green.getInstance().getParent();
-    if (pathArray != null && pathArray.length > 1){
-      for (int i = 0; i < pathArray.length - 1; i++){
-        _processing.stroke(0,128,0);
+    if (pathArray != null && pathArray.length > 1) {
+      for (int i = 0; i < pathArray.length - 1; i++) {
+        _processing.stroke(0, 128, 0);
         _processing.line(pathArray[i].x * tileLength + (float)tileLength/2, 
-                         pathArray[i].y * tileLength + (float)tileLength/2, 
-                         pathArray[i + 1].x * tileLength + (float)tileLength/2, 
-                         pathArray[i + 1].y * tileLength + (float)tileLength/2);
+          pathArray[i].y * tileLength + (float)tileLength/2, 
+          pathArray[i + 1].x * tileLength + (float)tileLength/2, 
+          pathArray[i + 1].y * tileLength + (float)tileLength/2);
       }
     }
   }
@@ -193,8 +198,8 @@ public class Grid extends Actor {
   }
   public void clear() {
     map = new Tile[this.mapWidth/tileLength][this.mapHeight/tileLength];
-    for (int x = 0; x < map[0].length; x++)
-      for (int y = 0; y < map.length; y++)
+    for (int x = 0; x < map.length; x++)
+      for (int y = 0; y < map[0].length; y++)
         map[x][y] = new Tile(x, y);
   }
   //Convert the grid into a JSONObject
@@ -209,9 +214,9 @@ public class Grid extends Actor {
     json.setJSONObject("metaData", metaData);
 
     JSONArray tilesX = new JSONArray();
-    for (int x = 0; x < map[0].length; x++) {
+    for (int x = 0; x < map.length; x++){
       JSONArray tilesY = new JSONArray();
-      for (int y = 0; y < map.length; y++) {
+      for (int y = 0; y < map[0].length; y++){
         tilesY.setJSONObject(y, new JSONObject().setInt("type", map[x][y].tileType.ordinal()));
       }
       tilesX.setJSONArray(x, tilesY);
@@ -254,7 +259,7 @@ public class Grid extends Actor {
       for (Node n : getNeighbors(current)) {
         if (closed.contains(n))
           continue;
-        if (n.gCost() < gCostDictionary.getOrDefault(n.tile, Integer.MAX_VALUE)){
+        if (n.gCost() < gCostDictionary.getOrDefault(n.tile, Integer.MAX_VALUE)) {
           gCostDictionary.put(n.tile, n.gCost());
           open.add(n);
         }
