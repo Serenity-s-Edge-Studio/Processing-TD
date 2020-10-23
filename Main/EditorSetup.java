@@ -35,7 +35,6 @@ public class EditorSetup extends Scene {
   @Override
     public void act(float deltaTime) {
     PApplet pEngine = Green.getInstance().getParent();
-    pEngine.background(51);
   }
   public void updateMarginX(GCustomSlider source, GEvent event) { //_CODE_:marginXSilder:245145:
     System.out.println("marginXSilder - GCustomSlider >> GEvent." + event + " @ " + engine.getParent().millis());
