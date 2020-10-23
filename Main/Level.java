@@ -25,6 +25,7 @@ public class Level extends Scene {
   int score = 0;
   int money = 100;
   List<Wave> activeWaves = new LinkedList<Wave>();
+  HashMap<Vector2Int, Turret> turrets = new HashMap<Vector2Int, Turret>();
   public Level(Green engine) {
     super(engine);
   }
@@ -62,17 +63,26 @@ public class Level extends Scene {
         return;
       Tile selectedTile = map.getTileAtPosition(pEngine.mouseX, pEngine.mouseY);
       if (selectedTile != null && selectedTile.tileType == Tile.type.Mount) {
-        ShowTurretOptions(selectedTile);
-      }else if (TurretDialog.instance != null){
+        Turret existingTurret = turrets.get(new Vector2Int(selectedTile.x, selectedTile.y));
+        if (existingTurret != null)
+          ShowTurretOptions(selectedTile, existingTurret);
+        else
+          ShowTurretOptions(selectedTile);
+      } else if (TurretDialog.instance != null) {
         removeObject(TurretDialog.instance);
         TurretDialog.instance = null;
       }
     }
   }
-  private void ShowTurretOptions(Tile selected){
+  private void ShowTurretOptions(Tile selected) {
     Vector2Int position = map.scalePosition(new Vector2Int(selected.x, selected.y));
     position.x += map.getTileLength();
     addObject(new TurretDialog(position.x, position.y, selected));
+  }
+  private void ShowTurretOptions(Tile selected, Turret existingTurret) {
+    Vector2Int position = map.scalePosition(new Vector2Int(selected.x, selected.y));
+    position.x += map.getTileLength();
+    addObject(new TurretDialog(position.x, position.y, selected, existingTurret));
   }
   public void startWave(GImageButton source, GEvent event) {
     System.out.println("startWaveButton - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
@@ -102,16 +112,40 @@ public class Level extends Scene {
     startWaveButton.dispose(); 
     quitLevelButton.dispose();
   }
-  public void goalReached(Enemy enemy){
+  public void goalReached(Enemy enemy) {
     removeObject(enemy);
     currentScoreMultiplier = 1;
     remainingEnemies--;
   }
-  public void enemyKilled(Enemy enemy){
+  public void enemyKilled(Enemy enemy) {
     removeObject(enemy);
     remainingEnemies--;
     money += 100;
     score += 100 * currentScoreMultiplier;
+  }
+  public boolean buy(int cost) {
+    if (cost <= money) {
+      money -= cost;
+      return true;
+    }
+    return false;
+  }
+  public boolean addTurret(Turret newTurret) {
+    int cost;
+    switch (newTurret.turretType) {
+    case Dolphin:
+      cost = 100;
+      break;
+    case Shark:
+      cost = 1000;
+      break;
+    default: 
+      cost = 100;
+      break;
+    }
+    Tile tile = map.getTileAtPosition(Math.round(newTurret.getX()), Math.round(newTurret.getY()));
+
+    return cost <= money && turrets.putIfAbsent(new Vector2Int(tile.x, tile.y), newTurret) == null && buy(cost);
   }
   class Wave {
     public int remaining;
@@ -126,7 +160,10 @@ public class Level extends Scene {
     public void tick(float deltaTime) {
       currentDelay = Math.max(0, currentDelay - deltaTime * ((float)Math.random()*2 + .5f));
       if (currentDelay < 0.1f) {
-        if (!started){started = true; waveNumber++;}
+        if (!started) {
+          started = true; 
+          waveNumber++;
+        }
         addObject(new Enemy(path[0].x, path[0].y, Enemy.sprites[0], map.getTileLength(), map.getTileLength(), path, Level.this, currentWaveMultiplier));
         remainingEnemies++;
         remaining--;
@@ -134,18 +171,19 @@ public class Level extends Scene {
       }
     }
   }
-  class Canvas extends Actor{
-    public Canvas(){
-      super(0,0,512,512);
+  class Canvas extends Actor {
+    public Canvas() {
+      super(0, 0, 512, 512);
     }
     @Override
-    public void act(float deltaTime){}
+      public void act(float deltaTime) {
+    }
     @Override
-    public void draw(){
+      public void draw() {
       PApplet pEngine = engine.getParent();
       pEngine.fill(153);
       pEngine.noStroke();
-      pEngine.rect(0,0,512,map.getMarginY());
+      pEngine.rect(0, 0, 512, map.getMarginY());
       pEngine.fill(255);
       DecimalFormat formatter = new DecimalFormat("#.00");
       pEngine.text("Score: " + score, 0, map.getMarginY()/2);
@@ -153,7 +191,7 @@ public class Level extends Scene {
       pEngine.text("Difficulty multiplier: x" + formatter.format(currentWaveMultiplier), 225, map.getMarginY()/2);
       pEngine.text("Money: $" + money, 425, map.getMarginY()/2);
       pEngine.fill(153);
-      pEngine.rect(0,513-map.getMarginY(),512,512);
+      pEngine.rect(0, 513-map.getMarginY(), 512, 512);
       pEngine.fill(255);
       pEngine.text("Remaining enemies: " + remainingEnemies, 128, 513-map.getMarginY()/2);
       pEngine.text("Wave count: " + waveNumber, 275, 513-map.getMarginY()/2);

@@ -118,6 +118,14 @@ public void selectShark(GImageButton source, GEvent event) { //_CODE_:sharkButto
   println("imgButton3 - GImageButton >> GEvent." + event + " @ " + millis());
 } //_CODE_:sharkButton:544988:
 
+synchronized public void win_draw5(PApplet appc, GWinData data) { //_CODE_:window5:398825:
+  appc.background(230);
+} //_CODE_:window5:398825:
+
+public void imgButton2_click1(GImageButton source, GEvent event) { //_CODE_:imgButton2:300903:
+  println("imgButton2 - GImageButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:imgButton2:300903:
+
 
 
 // Create all the GUI controls. 
@@ -264,7 +272,7 @@ public void createGUI(){
   window4.noLoop();
   window4.setActionOnClose(G4P.KEEP_OPEN);
   window4.addDrawHandler(this, "win_draw4");
-  dolphinButton = new GImageButton(window4, 0, 20, 32, 32, new String[] { "Dolphin_Turret.png", "Dolphin_Turret.png", "Dolphin_Turret.png" } );
+  dolphinButton = new GImageButton(window4, 0, 20, 64, 64, new String[] { "Dolphin_Turret.png", "Dolphin_Turret.png", "Dolphin_Turret.png" } );
   dolphinButton.addEventHandler(this, "selectDolphin");
   sharkButton = new GImageButton(window4, 60, 20, 32, 32, new String[] { "Shark_Turret (Prototype).png", "Shark_Turret (Prototype).png", "Shark_Turret (Prototype).png" } );
   sharkButton.addEventHandler(this, "selectShark");
@@ -280,10 +288,17 @@ public void createGUI(){
   sharkDesc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   sharkDesc.setText("My label");
   sharkDesc.setOpaque(false);
+  window5 = GWindow.getWindow(this, "Window title", 0, 0, 120, 120, JAVA2D);
+  window5.noLoop();
+  window5.setActionOnClose(G4P.KEEP_OPEN);
+  window5.addDrawHandler(this, "win_draw5");
+  imgButton2 = new GImageButton(window5, 97, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+  imgButton2.addEventHandler(this, "imgButton2_click1");
   editorSetup.loop();
   window2.loop();
   window3.loop();
   window4.loop();
+  window5.loop();
 }
 
 // Variable declarations 
@@ -337,3 +352,5 @@ GImageButton sharkButton;
 GLabel title; 
 GLabel dolphin1desc; 
 GLabel sharkDesc; 
+GWindow window5;
+GImageButton imgButton2; 

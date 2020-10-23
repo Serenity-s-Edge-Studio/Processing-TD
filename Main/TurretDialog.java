@@ -15,13 +15,18 @@ public class TurretDialog extends Actor {
   Tile tile;
   Turret selectedTurret;
   Vector2Int tl, br;
+
+  GImageButton buySpeedButton;
+  GImageButton buyRangeButton;
+  GImageButton buyDamageButton;
+  GImageButton investButton;
   public TurretDialog(int x, int y, Tile tile) {
-    super(x, y, 120, 120);
+    super(x, y, 140, 140);
     this.x = x;
     this.y = y;
     this.tile = tile;
     tl = new Vector2Int(x, y);
-    br = new Vector2Int(x + 120, y + 120);
+    br = new Vector2Int(x + getWidth(), y + getHeight());
   }
   public TurretDialog(int x, int y, Tile tile, Turret turret) {
     this(x, y, tile);
@@ -53,10 +58,22 @@ public class TurretDialog extends Actor {
     pEngine.stroke(255);
     pEngine.fill(153);
     pEngine.square(0, 0, getWidth());
+    pEngine.fill(255);
+    pEngine.textAlign(PConstants.CENTER, PConstants.CENTER);
     if (selectedTurret != null) {
-    }else{
-      pEngine.fill(255);
-      pEngine.textAlign(PConstants.CENTER, PConstants.CENTER);
+      pEngine.text("Upgrade turret", getWidth()/2, 10);
+      pEngine.textAlign(PConstants.LEFT, PConstants.TOP);
+      pEngine.textSize(8);
+      pEngine.textLeading(12);
+      pEngine.text(selectedTurret.turretType.toString() + "\nRange:\nSpeed:\nDamage:\nInvestment:", 0, 60);
+      int[] levels = selectedTurret.getLevels();
+      pEngine.textAlign(PConstants.CENTER, PConstants.TOP);
+      pEngine.text("Levels:\n" + levels[0] + "\n" + levels[1] + "\n" + levels[2] + "\n" + levels[3], 45, 60);
+      float[] values = selectedTurret.getValues();
+      pEngine.text("Values:\n" + values[0] + "\n" + values[1] + "\n" + values[2] + "\n" + values[3] + "%", 75, 60);
+      int[] prices = selectedTurret.getPrices();
+      pEngine.text("Cost:\n" + prices[0] + "\n" + prices[1] + "\n" + prices[2] + "\n" + prices[3], 105, 60);
+    } else {
       pEngine.text("Buy turret", 60, 10);
       pEngine.textAlign(PConstants.LEFT, PConstants.TOP);
       pEngine.textSize(8);
@@ -73,45 +90,47 @@ public class TurretDialog extends Actor {
       dolphinButton.addEventHandler(this, "selectDolphin");
       sharkButton = new GImageButton(Green.getInstance().getParent(), x + getWidth() - 32 - getWidth()/8, 20 + y, 32, 32, new String[] { "Shark_Turret.png", "Shark_Turret.png", "Shark_Turret.png" } );
       sharkButton.addEventHandler(this, "selectShark");
-      //title = new GLabel(Green.getInstance().getParent(), 0 + x, 0 + y, 100, 20);
-      //title.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-      //title.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 12));
-      //title.setText("Buy turret");
-      //title.setOpaque(false);
-      //G4P.setDisplayFont("Arial", G4P.PLAIN, 6);
-      //dolphin1desc = new GLabel(Green.getInstance().getParent(), 0 + x, 60 + y, 60, 40);
-      //dolphin1desc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-      //dolphin1desc.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 6));
-      //dolphin1desc.setText("Dolphin turret:\nSpeed: 1\nDamage:20\nCost:100");
-      //dolphin1desc.setOpaque(false);
-      //sharkDesc = new GLabel(Green.getInstance().getParent(), 60 + x, 60 + y, 40, 40);
-      //sharkDesc.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-      //sharkDesc.setFont(Scene.getFont("raidercrusader.ttf", Font.PLAIN, 6));
-      //sharkDesc.setText("Shark turret:\nSpeed: 10\nDamage:5\nCost:1000");
-      //sharkDesc.setOpaque(false);
-      //G4P.setDisplayFont("Arial", G4P.PLAIN, 12);
+    } else {
+      buySpeedButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buySpeedButton.addEventHandler(selectedTurret, "buySpeed");
+      buyRangeButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buyRangeButton.addEventHandler(selectedTurret, "buyRange");
+      buyDamageButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      buyDamageButton.addEventHandler(selectedTurret, "buyDamage");
+      investButton = new GImageButton(Green.getInstance().getParent(), getX() + getWidth() - 15, 49, 10, 10, new String[] { "Buy_Button.png", "Buy_Button.png", "Buy_Button.png" } );
+      investButton.addEventHandler(selectedTurret, "invest");
     }
   }
   public void selectDolphin(GImageButton source, GEvent event) { //_CODE_:dolphinButton:204492:
     System.out.println("imgButton2 - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     Vector2Int position = ((Level)getWorld()).map.scalePosition(new Vector2Int(tile.x, tile.y));
-    getWorld().addObject(new Turret(position.x, position.y, ((Level)getWorld()).map.getTileLength(), Turret.type.Dolphin));
-    getWorld().removeObject(this);
-    instance = null;
+    Turret bought = new Turret(position.x, position.y, ((Level)getWorld()).map.getTileLength(), Turret.type.Dolphin);
+    if (((Level)getWorld()).addTurret(bought)) {
+      getWorld().addObject(bought);
+      getWorld().removeObject(this);
+      instance = null;
+    }
   } //_CODE_:dolphinButton:204492:
 
   public void selectShark(GImageButton source, GEvent event) { //_CODE_:sharkButton:544988:
     System.out.println("imgButton3 - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     Vector2Int position = ((Level)getWorld()).map.scalePosition(new Vector2Int(tile.x, tile.y));
-    getWorld().addObject(new Turret(position.x, position.y, ((Level)getWorld()).map.getTileLength(), Turret.type.Shark));
-    getWorld().removeObject(this);
-    instance = null;
+    Turret bought = new Turret(position.x, position.y, ((Level)getWorld()).map.getTileLength(), Turret.type.Shark);
+    if (((Level)getWorld()).addTurret(bought)) {
+      getWorld().addObject(bought);
+      getWorld().removeObject(this);
+      instance = null;
+    }
   } //_CODE_:sharkButton:544988:
   public void dispose() {
-    dolphinButton.dispose(); 
-    sharkButton.dispose(); 
-    //title.dispose(); 
-    //dolphin1desc.dispose(); 
-    //sharkDesc.dispose();
+    if (selectedTurret == null) {
+      dolphinButton.dispose(); 
+      sharkButton.dispose();
+    } else {
+      buySpeedButton.dispose();
+      buyRangeButton.dispose();
+      buyDamageButton.dispose();
+      investButton.dispose();
+    }
   }
 }
