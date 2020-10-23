@@ -113,6 +113,8 @@ public class Level extends Scene {
   void disposeUI() {
     startWaveButton.dispose(); 
     quitLevelButton.dispose();
+    if (TurretDialog.instance != null)
+      TurretDialog.instance.dispose();
   }
   public void goalReached(Enemy enemy) {
     removeObject(enemy);
