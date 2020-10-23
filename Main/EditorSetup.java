@@ -30,6 +30,7 @@ public class EditorSetup extends Scene {
     marginY = marginYSlider.getValueI();
     tileSize = tileSizeSlider.getValueI();
     updateMapSize();
+    MusicManager.playEditor();
   }
   @Override
     public void act(float deltaTime) {

@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 import g4p_controls.*;
 
 import Green.*;
@@ -14,6 +16,8 @@ public class MainMenu extends Scene {
     public void prepare() {
     setBackgroundColor(0, 0, 0);
     createGUI();
+    MusicManager.init();
+    MusicManager.playMenu();
   }
   @Override
     public void act(float deltaTime) {

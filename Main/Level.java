@@ -41,6 +41,7 @@ public class Level extends Scene {
     addObject(new Canvas());
     createUI();
     setBackgroundColor(0, 0, 0);
+    MusicManager.levelMusic();
   }
   @Override
     public void act(float deltaTime) {
@@ -89,6 +90,7 @@ public class Level extends Scene {
     if (path == null)
       path = map.getPathScaled();
     startWave(true);
+    MusicManager.playShark(waveNumber < 1);
   }
   public void startWave(boolean triggeredByUser) {
     waveSize *= currentWaveMultiplier;
