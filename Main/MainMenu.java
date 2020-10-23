@@ -14,7 +14,6 @@ public class MainMenu extends Scene {
   }
   @Override
     public void prepare() {
-    setBackgroundColor(0, 0, 0);
     createGUI();
     MusicManager.init();
     MusicManager.playMenu();

@@ -40,7 +40,6 @@ public class Level extends Scene {
     addObject(map);
     addObject(new Canvas());
     createUI();
-    setBackgroundColor(0, 0, 0);
     MusicManager.levelMusic();
   }
   @Override

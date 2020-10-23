@@ -9,10 +9,12 @@ public abstract class Scene extends World {
   public Scene(Green engine) {
     super();
     this.engine = engine;
+    setBackgroundColor(173, 216, 230);
   }
   public Scene(Green engine, PImage image) {
     super(image);
     this.engine = engine;
+    setBackgroundColor(173, 216, 230);
   }
   public static Font getFont(String name, int style, int size) {
     Map<Integer, Map<Integer, Font>> styleMap = fonts.get(name); //<>//
