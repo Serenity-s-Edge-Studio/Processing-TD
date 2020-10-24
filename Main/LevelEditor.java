@@ -57,9 +57,14 @@ public class LevelEditor extends Scene {
 
   public void saveMap(GImageButton source, GEvent event) { //_CODE_:saveMapButton:670195:
     System.out.println("imgButton4 - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
-    engine.getParent().saveJSONObject(map.toJSON(), "data/saves/test.json");
+    File file = new File(pEngine.sketchPath("data/saves/.json"));
+    pEngine.selectOutput("Saves map as:", "locationSelected");
+    
   } //_CODE_:saveMapButton:670195:
-
+  public void locationSelected(File selection){
+    if (file != null)
+    engine.getParent().saveJSONObject(map.toJSON(), file.getAbsolutePath());
+  }
   public void clearMap(GImageButton source, GEvent event) { //_CODE_:clearMapButton:453486:
     System.out.println("imgButton5 - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
     map.clear();
