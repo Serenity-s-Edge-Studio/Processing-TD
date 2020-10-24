@@ -125,6 +125,7 @@ public class Level extends Scene {
     remainingEnemies--;
     money += 100;
     score += 100 * currentScoreMultiplier;
+    currentScoreMultiplier *= 1.001f;
   }
   public boolean buy(int cost) {
     if (cost <= money) {
