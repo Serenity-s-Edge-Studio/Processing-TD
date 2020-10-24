@@ -56,6 +56,11 @@ public class EditorSetup extends Scene {
 
   public void generateMap(GButton source, GEvent event) { //_CODE_:generateButton:411971:
     System.out.println("generateButton - GButton >> GEvent." + event + " @ " + engine.getParent().millis());
+    mapWidth = engine.getParent().sketchWidth() - (marginX*2);
+    mapHeight = engine.getParent().sketchHeight() - (marginY*2);
+    
+    marginX += (mapWidth%tileSize)/2;
+    marginY += (mapHeight%tileSize)/2;
     engine.loadWorld(new LevelEditor(engine, new Grid(marginX, marginY, tileSize, 512, 512)));
     disposeUI();
   } //_CODE_:generateButton:411971:

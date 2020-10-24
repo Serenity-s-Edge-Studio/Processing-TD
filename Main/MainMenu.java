@@ -35,7 +35,7 @@ public class MainMenu extends Scene {
       String name = selection.getName();
       String extension = name.substring(name.lastIndexOf("."));
       if (extension.equals( ".json")){
-        engine.loadWorld(new LevelEditor(engine, Grid.fromJSON(engine.getParent().loadJSONObject(selection.getAbsolutePath()))));
+        engine.loadWorld(new Level(engine, Grid.fromJSON(engine.getParent().loadJSONObject(selection.getAbsolutePath()))));
         disposeUI();
       }
     }

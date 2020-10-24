@@ -62,9 +62,12 @@ public class Grid extends Actor {
       if (path != null) {
         pathArray = new Vector2Int[0];
         pathArray = path.toArray(pathArray);
+        return getPath();
       }
+      System.out.println("No path found!");
+      return null;
     }
-    return pathArray != null?pathArray.clone():null;
+    return pathArray.clone();
   }
   public Vector2Int[] getPathScaled() {
     Vector2Int[] returnList = getPath();
@@ -245,13 +248,13 @@ public class Grid extends Actor {
     return new Grid(marginX, marginY, tileLength, mapWidth, mapHeight, mapArray);
   }
   public Queue<Vector2Int> calculatePath() {
-    if (!goalExists() || !spawnExists())
+    if (!goalExists() || !spawnExists()) //<>//
       return null;
     PriorityQueue<Node> open = new PriorityQueue<Node>(new NodeComparator());
     open.add(new Node(spawnTile, this));
     List<Node> closed = new ArrayList<Node>();
     Map<Tile, Integer> gCostDictionary = new HashMap<Tile, Integer>(10);
-    while (open.peek() != null) {
+    while (open.peek() != null) { //<>//
       if (open.peek().tile.tileType == Tile.type.Goal)
         return retracePath(open.peek());
       Node current = open.poll();
@@ -288,7 +291,7 @@ public class Grid extends Actor {
         if (x == 0 && y == 0) continue;
         int xIndex = parent.tile.x + x; 
         int yIndex = parent.tile.y + y;
-        if (yIndex < 0 || yIndex >= map.length || xIndex < 0 || xIndex >= map[0].length)
+        if (yIndex < 0 || yIndex >= map[0].length || xIndex < 0 || xIndex >= map.length)
           continue;
         if (map[xIndex][yIndex].tileType == Tile.type.Goal || map[xIndex][yIndex].tileType == Tile.type.Walkable)
           returnList.add(new Node(parent, map[xIndex][yIndex], this));
