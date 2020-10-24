@@ -4,6 +4,7 @@ import g4p_controls.*;
 
 import Green.*;
 import processing.core.*;
+import java.io.*;
 public class MainMenu extends Scene {
   GImageButton playButton;
   GImageButton instructionsButton; 
@@ -24,10 +25,20 @@ public class MainMenu extends Scene {
       
   }
   public void loadGame(GImageButton source, GEvent event) {
-    System.out.println("imgButton1 - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
+    System.out.println("loadButton - GButton >> GEvent." + event + " @ " + engine.getParent().millis());
     System.out.println("Load Game");
-    disposeUI();
-    engine.loadWorld(new Level(engine, Grid.fromJSON(engine.getParent().loadJSONObject("saves/test.json"))));
+    File file = new File(engine.getParent().sketchPath("data/saves/*.json"));
+    engine.getParent().selectInput("Select saved map:", "loadMap", file, this);
+  } //_CODE_:loadButton:405479:
+  public void loadMap(File selection){
+    if (selection != null){
+      String name = selection.getName();
+      String extension = name.substring(name.lastIndexOf("."));
+      if (extension.equals( ".json")){
+        engine.loadWorld(new LevelEditor(engine, Grid.fromJSON(engine.getParent().loadJSONObject(selection.getAbsolutePath()))));
+        disposeUI();
+      }
+    }
   }
   public void instructionScene(GImageButton source, GEvent event) {
     System.out.println("instructionsButton - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
