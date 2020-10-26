@@ -89,7 +89,7 @@ public class Level extends Scene {
     if (path == null)
       path = map.getPathScaled();
     startWave(true);
-    MusicManager.playShark(waveNumber < 1);
+    MusicManager.playSharkOnce();
   }
   public void startWave(boolean triggeredByUser) {
     waveSize *= currentWaveMultiplier;
@@ -101,6 +101,7 @@ public class Level extends Scene {
   public void quitLevel(GImageButton source, GEvent event) {
     System.out.println("quitLevel - GImageButton >> GEvent." + event + " @ " + Green.getInstance().getParent().millis());
     engine.loadWorld(new MainMenu(engine));
+    MusicManager.clearQueue();
     disposeUI();
   }
   private void createUI() {

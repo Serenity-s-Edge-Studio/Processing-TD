@@ -5,6 +5,7 @@ import processing.core.*;
 import java.util.*;
 public class MusicManager{
   public static boolean initialized = false;
+  public static boolean sWavePlayed = false;
   public static SoundFile seashells;
   public static SoundFile letsGoo;
   public static SoundFile sunset;
@@ -57,8 +58,15 @@ public class MusicManager{
       }
     }, (long)sharkMixtape.duration()*1000L);
   }
-  public static void playShark(boolean triggered){
-    if (triggered) playShark();
+  public static void playSharkOnce(){
+    if (!sWavePlayed) {
+      playShark();
+      sWavePlayed = true;
+    }
+  }
+  public static void clearQueue(){
+    queue.cancel();
+    queue = new Timer();
   }
   public static void playEditor(){
     letsGoo.stop();
