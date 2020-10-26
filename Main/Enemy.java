@@ -28,14 +28,15 @@ public class Enemy extends Actor {
   }
   public void act(float deltaTime) {
     float currentFraction = progress + (deltaTime * speed)/currentDistance;
-    while (currentFraction - 1 > .01f && targetIndex < path.length - 1) {
-      targetIndex++;
+    while (currentFraction - 1 > .01f && targetIndex < path.length) {
       currentDistance = Vector2Int.distance(path[targetIndex-1], path[targetIndex]);
+      targetIndex++;
       currentFraction -= 1;
     }
-    if (targetIndex >= path.length - 1) {
+    if (targetIndex == path.length) {
       ((Level)getWorld()).goalReached(this);
       isDead = true;
+      return;
     }
     Vector2Int lastPos = path[targetIndex-1];
     Vector2Int targetPos = path[targetIndex];
