@@ -34,6 +34,7 @@ public class LevelEditor extends Scene {
     setBackgroundColor(0, 0, 0);
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
     PApplet pEngine = Green.getInstance().getParent();
     pEngine.background(51);

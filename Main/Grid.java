@@ -120,9 +120,11 @@ public class Grid extends Actor {
     }
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
   }
   @Override
+  //This function is called every frame by Green
     public void draw() {
     PApplet _processing = Green.getInstance().getParent();
 
@@ -157,6 +159,7 @@ public class Grid extends Actor {
     _processing.stroke(250, 250, 250);
     _processing.rect(0, 0, getWidth(), getHeight());
   }
+  //This function draws the calculated path as a green line
   private void DrawPath() {
     PApplet _processing = Green.getInstance().getParent();
     if (pathArray != null && pathArray.length > 1) {
@@ -169,6 +172,7 @@ public class Grid extends Actor {
       }
     }
   }
+  //Update tile at unscaled position
   public void SetTile(int xPos, int yPos, Tile.type type) {
     Tile tile = getTileAtPosition(xPos, yPos);
     if (tile != null) {
@@ -185,6 +189,7 @@ public class Grid extends Actor {
       }
     }
   }
+  //helper method for rounding numbers
   int roundUp(int numToRound, int multiple)
   {
     if (multiple == 0)
@@ -199,6 +204,7 @@ public class Grid extends Actor {
     else
       return numToRound + multiple - remainder;
   }
+  //Creates a empty map using the empty tiles
   public void clear() {
     map = new Tile[this.mapWidth/tileLength][this.mapHeight/tileLength];
     for (int x = 0; x < map.length; x++)
@@ -247,6 +253,7 @@ public class Grid extends Actor {
     }
     return new Grid(marginX, marginY, tileLength, mapWidth, mapHeight, mapArray);
   }
+  //Function to calculate the path using the A* pathing algorithm
   public Queue<Vector2Int> calculatePath() {
     if (!goalExists() || !spawnExists()) //<>//
       return null;
@@ -270,6 +277,7 @@ public class Grid extends Actor {
     }
     return null;
   }
+  //Helper method for retracing a Node based linked list into a Queue<Vector2Int>
   private Queue<Vector2Int> retracePath(Node end) {
     Node current = end;
     Stack<Tile> stack = new Stack<Tile>();
@@ -284,6 +292,7 @@ public class Grid extends Actor {
     }
     return returnQueue;
   }
+  //Finds the list of neighboring nodes
   private List<Node> getNeighbors(Node parent) {
     List<Node> returnList = new ArrayList<Node>();
     for (int x = -1; x < 2; x++) {

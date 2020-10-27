@@ -34,6 +34,7 @@ public class TurretDialog extends Actor {
     this.selectedTurret = turret;
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
   }
   public boolean pointInBounds(int x, int y) {

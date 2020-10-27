@@ -43,6 +43,7 @@ public class Level extends Scene {
     MusicManager.levelMusic();
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
     List<Wave> wavesToRemove = new LinkedList<Wave>();
     for (Wave w : activeWaves) {
@@ -176,6 +177,7 @@ public class Level extends Scene {
       }
     }
   }
+  //Sub class to help with rendering the processing UI
   class Canvas extends Actor {
     public Canvas() {
       super(0, 0, 512, 512);

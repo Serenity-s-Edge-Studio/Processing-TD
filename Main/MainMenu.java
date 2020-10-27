@@ -21,6 +21,7 @@ public class MainMenu extends Scene {
     addObject(new Canvas(Green.getInstance().getParent().sketchWidth()/2, 40));
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
       
   }
@@ -42,6 +43,8 @@ public class MainMenu extends Scene {
   }
   public void instructionScene(GImageButton source, GEvent event) {
     System.out.println("instructionsButton - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());
+    disposeUI();
+    engine.loadWorld(new Instructions(engine));
   }
   public void exitGame(GImageButton source, GEvent event) {
     System.out.println("quitButton - GImageButton >> GEvent." + event + " @ " + engine.getParent().millis());

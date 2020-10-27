@@ -37,6 +37,7 @@ public class Turret extends Actor {
     rangeLevel = 1; damageLevel = 1; fireRateLevel = 1; investmentLevel = 1;
   }
   @Override
+  //This function is called every frame by Green
     public void act(float deltaTime) {
     currentDelay = Math.max(0, currentDelay - deltaTime);
     if (currentDelay < .01f) {

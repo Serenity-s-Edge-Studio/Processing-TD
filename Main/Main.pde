@@ -5,24 +5,32 @@ import Green.*;
 import g4p_controls.*;
 
 public Green engine;
+
 private MainMenu menu;
 void setup()
 {
   size(512, 512);
   credits();
   smooth(8);
+  //load custom font
   textFont(createFont("raidercrusader.ttf", 12, true));
+  //initialise the game engine
   engine = new Green(this);
+  //create MainMenu scene
   menu = new MainMenu(engine);
+  //load the MainMenu scene
   engine.loadWorld(menu);
-  loadTileResources();
+  loadImageResources();
 }
+//Main game loop
 void draw() {
   background(173, 216, 230);
-  engine.handleAct();
-  engine.handleDraw();
-  engine.handleInput();
+  //call each of greens' game loops.
+  engine.handleAct();//update
+  engine.handleDraw();//draw loop
+  engine.handleInput();//register all frame-by-frame input changes
 }
+//event handler pipes processings' input events to green's own event handler
 void mousePressed() {
   engine.handleMouseDown(mouseButton);
 }
@@ -38,13 +46,15 @@ void keyPressed() {
 void keyReleased() {
   engine.handleKeyUp(key, keyCode);
 }
+//prints credits to the console
 void credits(){
   println("Diver defense: a tower defense game made in Processing");
   println("created by: serenity edge studios:");
   println("Sam Kessler, MarkAllman, meganmcnamee, Dillweeddude");
   println("Starting game engine");
 }
-void loadTileResources() {
+//This function loads all the necessary graphics resources
+void loadImageResources() {
   Tile.sprites = new PImage[5];
   Tile.sprites[0] = loadImage("Path_Tile.png");
   Tile.sprites[1] = loadImage("Sand Tile.png");
